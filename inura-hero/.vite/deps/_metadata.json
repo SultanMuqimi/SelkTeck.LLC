@@ -1,0 +1,31 @@
+{
+  "hash": "90495993",
+  "configHash": "d06027a6",
+  "lockfileHash": "bf2ac90e",
+  "browserHash": "e28ee842",
+  "optimized": {
+    "bippy/dist/jsx-dev-runtime": {
+      "src": "../../node_modules/bippy/dist/jsx-dev-runtime.js",
+      "file": "bippy_dist_jsx-dev-runtime.js",
+      "fileHash": "9a9ab9ba",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "6421a92c",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "2f54add4",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "chunk-IWS3P2QR": {
+      "file": "chunk-IWS3P2QR.js"
+    }
+  }
+}
