@@ -12,6 +12,11 @@ function App() {
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [expandedPartner, setExpandedPartner] = useState<number | null>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const caseStudiesRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
@@ -84,6 +89,28 @@ function App() {
     contactRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoginData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+    setLoginError(''); // Clear error on input change
+  };
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoggingIn(true);
+    setLoginError('');
+
+    // Simulate API call delay
+    setTimeout(() => {
+      setIsLoggingIn(false);
+      setLoginError('Unauthorized: Invalid credentials. Access denied.');
+      // Clear the password field
+      setLoginData(prev => ({ ...prev, password: '' }));
+    }, 1500);
+  };
+
   useEffect(() => {
     setIsLoaded(true);
   }, []);
@@ -137,13 +164,160 @@ function App() {
           <img src={selkteckIcon} alt="SelkTeck Icon" className="h-12 w-auto mr-3" />
           <span className="text-2xl font-new-hero text-gray-900 tracking-tight select-none">SelkTeck. LLC</span>
         </div>
-        <button
-          className="bg-white border-2 border-gray-900 rounded-full px-6 py-3 text-sm font-golos text-gray-900 transition-all duration-300 hover:bg-gray-50 hover:shadow-lg"
-          onClick={scrollToContact}
-        >
-          Contact Us
-        </button>
+        <div className="flex items-center space-x-4">
+          <button
+            className="bg-white border-2 border-[#A68660] text-[#A68660] rounded-full px-6 py-3 text-sm font-golos transition-all duration-300 hover:bg-[#A68660] hover:text-white hover:shadow-lg"
+            onClick={() => setShowLoginModal(true)}
+          >
+            Login
+          </button>
+          <button
+            className="bg-white border-2 border-gray-900 rounded-full px-6 py-3 text-sm font-golos text-gray-900 transition-all duration-300 hover:bg-gray-50 hover:shadow-lg"
+            onClick={scrollToContact}
+          >
+            Contact Us
+          </button>
+        </div>
       </nav>
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
+          <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-slideUp">
+            {/* Close Button */}
+            <button
+              onClick={() => {
+                setShowLoginModal(false);
+                setLoginError('');
+                setLoginData({ email: '', password: '' });
+              }}
+              className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors z-10"
+            >
+              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            {/* Header Section */}
+            <div className="bg-gradient-to-br from-[#A68660] to-[#8B6F47] p-8 pb-12">
+              <div className="flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+              </div>
+              <h2 className="text-3xl font-new-hero text-white text-center mb-2">Welcome Back</h2>
+              <p className="text-white/80 font-golos text-center text-sm">Sign in to access your dashboard</p>
+            </div>
+
+            {/* Form Section */}
+            <div className="p-8 -mt-6">
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <form onSubmit={handleLoginSubmit} className="space-y-5">
+                  {/* Email Field */}
+                  <div>
+                    <label htmlFor="login-email" className="block text-sm font-golos text-gray-700 mb-2">
+                      Email Address
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                        </svg>
+                      </div>
+                      <input
+                        type="email"
+                        id="login-email"
+                        name="email"
+                        value={loginData.email}
+                        onChange={handleLoginChange}
+                        required
+                        className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#A68660] focus:outline-none transition-colors font-golos"
+                        placeholder="you@example.com"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Password Field */}
+                  <div>
+                    <label htmlFor="login-password" className="block text-sm font-golos text-gray-700 mb-2">
+                      Password
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                      </div>
+                      <input
+                        type="password"
+                        id="login-password"
+                        name="password"
+                        value={loginData.password}
+                        onChange={handleLoginChange}
+                        required
+                        className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#A68660] focus:outline-none transition-colors font-golos"
+                        placeholder="••••••••"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Error Message */}
+                  {loginError && (
+                    <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 flex items-start space-x-3 animate-shake">
+                      <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      <p className="text-sm font-golos text-red-800">{loginError}</p>
+                    </div>
+                  )}
+
+                  {/* Remember Me & Forgot Password */}
+                  <div className="flex items-center justify-between">
+                    <label className="flex items-center cursor-pointer">
+                      <input type="checkbox" className="w-4 h-4 text-[#A68660] border-gray-300 rounded focus:ring-[#A68660]" />
+                      <span className="ml-2 text-sm font-golos text-gray-600">Remember me</span>
+                    </label>
+                    <a href="#" className="text-sm font-golos text-[#A68660] hover:text-[#8B6F47] transition-colors">
+                      Forgot password?
+                    </a>
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isLoggingIn}
+                    className="w-full bg-gradient-to-r from-[#A68660] to-[#8B6F47] text-white rounded-xl py-3 font-golos font-medium hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                  >
+                    {isLoggingIn ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        <span>Signing In...</span>
+                      </>
+                    ) : (
+                      <span>Sign In</span>
+                    )}
+                  </button>
+                </form>
+
+                {/* Footer */}
+                <div className="mt-6 text-center">
+                  <p className="text-sm font-golos text-gray-600">
+                    Don't have an account?{' '}
+                    <a href="#" className="text-[#A68660] hover:text-[#8B6F47] font-medium transition-colors">
+                      Sign up
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Hero section */}
       <div className="mx-auto max-w-7xl px-4 py-10">
@@ -171,28 +345,6 @@ function App() {
                   View Our Work
                   <span className="ml-2 text-green-600">→</span>
                 </button>
-              </div>
-            </div>
-
-            {/* Stats/Showcase Section */}
-            <div className={`mt-16 transition-all duration-1000 ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`} style={{ transitionDelay: "400ms" }}>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-                <div className="text-center p-6">
-                  <div className="text-4xl md:text-5xl font-new-hero text-green-600 mb-2">50+</div>
-                  <div className="text-gray-600 font-golos text-sm">Projects Delivered</div>
-                </div>
-                <div className="text-center p-6">
-                  <div className="text-4xl md:text-5xl font-new-hero text-green-600 mb-2">98%</div>
-                  <div className="text-gray-600 font-golos text-sm">Client Satisfaction</div>
-                </div>
-                <div className="text-center p-6">
-                  <div className="text-4xl md:text-5xl font-new-hero text-green-600 mb-2">15+</div>
-                  <div className="text-gray-600 font-golos text-sm">Years Experience</div>
-                </div>
-                <div className="text-center p-6">
-                  <div className="text-4xl md:text-5xl font-new-hero text-green-600 mb-2">24/7</div>
-                  <div className="text-gray-600 font-golos text-sm">Support Available</div>
-                </div>
               </div>
             </div>
           </div>
@@ -315,75 +467,62 @@ function App() {
             </p>
           </div>
 
-          {/* Case Studies Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Case Study 1 */}
-            <div className="group cursor-pointer">
-              <div className="bg-gradient-to-br from-green-100 to-green-50 rounded-2xl p-8 h-64 mb-4 transition-all duration-300 group-hover:shadow-lg group-hover:scale-[1.02] flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-green-600/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
+          {/* Video Showcase */}
+          <div className="max-w-5xl mx-auto">
+            {/* Video Container with Beautiful Frame */}
+            <div className="relative group">
+              {/* Decorative Elements */}
+              <div className="absolute -inset-4 bg-gradient-to-r from-[#A68660]/20 via-green-500/20 to-[#A68660]/20 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500 opacity-50" />
+              
+              {/* Main Video Card */}
+              <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200/50">
+                {/* Video Player */}
+                <div className="relative aspect-video bg-gradient-to-br from-gray-900 to-gray-800">
+                  <video 
+                    className="w-full h-full object-cover"
+                    controls
+                    poster="/Pic.png"
+                  >
+                    <source src="/Vid.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  
+                  {/* Optional Play Button Overlay (if you want custom styling) */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-20 h-20 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
+                      <div className="w-16 h-16 bg-[#A68660] rounded-full flex items-center justify-center shadow-lg">
+                        <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-gray-500 font-golos text-sm">AI & Machine Learning</span>
                 </div>
-              </div>
-              <h3 className="text-xl font-new-hero text-gray-900 mb-2">AI-Powered Customer Service Platform</h3>
-              <p className="text-gray-600 font-golos text-sm mb-3">
-                Built an intelligent chatbot that reduced support tickets by 60% and improved response time by 80%.
-              </p>
-              <div className="flex items-center space-x-2">
-                <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-xs font-golos">AI</span>
-                <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-xs font-golos">NLP</span>
-                <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-xs font-golos">Cloud</span>
-              </div>
-            </div>
 
-            {/* Case Study 2 */}
-            <div className="group cursor-pointer">
-              <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl p-8 h-64 mb-4 transition-all duration-300 group-hover:shadow-lg group-hover:scale-[1.02] flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
+                {/* Video Info Bar */}
+                <div className="bg-gradient-to-r from-white to-gray-50 p-6 border-t border-gray-100">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                    <div>
+                      <h3 className="text-xl font-new-hero text-gray-900 mb-1">
+                        Watch Our Success Stories
+                      </h3>
+                      <p className="text-gray-600 font-golos text-sm">
+                        See how we transform ideas into powerful digital solutions
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                        <span className="text-sm font-golos text-gray-600">Live Projects</span>
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-gray-500 font-golos text-sm">Mobile Development</span>
                 </div>
               </div>
-              <h3 className="text-xl font-new-hero text-gray-900 mb-2">Enterprise Mobile App Suite</h3>
-              <p className="text-gray-600 font-golos text-sm mb-3">
-                Developed cross-platform mobile apps for field teams, increasing productivity by 45% across 500+ users.
-              </p>
-              <div className="flex items-center space-x-2">
-                <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-golos">React Native</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-golos">iOS</span>
-                <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-golos">Android</span>
-              </div>
-            </div>
 
-            {/* Case Study 3 */}
-            <div className="group cursor-pointer">
-              <div className="bg-gradient-to-br from-green-100 to-green-50 rounded-2xl p-8 h-64 mb-4 transition-all duration-300 group-hover:shadow-lg group-hover:scale-[1.02] flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-green-600/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                    </svg>
-                  </div>
-                  <span className="text-gray-500 font-golos text-sm">Cloud Infrastructure</span>
-                </div>
-              </div>
-              <h3 className="text-xl font-new-hero text-gray-900 mb-2">Cloud Migration & Optimization</h3>
-              <p className="text-gray-600 font-golos text-sm mb-3">
-                Migrated legacy systems to AWS, reducing infrastructure costs by 40% while improving uptime to 99.99%.
-              </p>
-              <div className="flex items-center space-x-2">
-                <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-xs font-golos">AWS</span>
-                <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-xs font-golos">DevOps</span>
-                <span className="px-3 py-1 bg-green-100 text-green-600 rounded-full text-xs font-golos">Kubernetes</span>
-              </div>
+              {/* Corner Accents */}
+              <div className="absolute -top-3 -left-3 w-24 h-24 bg-[#A68660]/10 rounded-full blur-xl" />
+              <div className="absolute -bottom-3 -right-3 w-32 h-32 bg-green-500/10 rounded-full blur-xl" />
             </div>
           </div>
 
@@ -540,6 +679,141 @@ function App() {
         </div>
       </div>
 
+      {/* Why Partner With Us Section */}
+      <div className="bg-gradient-to-r from-white to-[#E8F5E4] py-20">
+        <div className="mx-auto max-w-5xl px-4">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-new-hero text-gray-900 mb-4">
+              Why Partner With <span className="text-[#A68660]">Us</span>
+            </h2>
+          </div>
+
+          {/* Accordion Rows */}
+          <div className="space-y-2">
+            {/* Accordion 1 - AI Expertise */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition-all duration-300">
+              <button
+                onClick={() => setExpandedPartner(expandedPartner === 1 ? null : 1)}
+                className="w-full flex items-center justify-between px-8 py-5 text-left hover:bg-gray-50 transition-colors"
+              >
+                <h3 className="text-xl font-new-hero text-gray-900">AI Expertise</h3>
+                <svg
+                  className={`w-5 h-5 text-[#A68660] transition-transform duration-300 ${expandedPartner === 1 ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div
+                className={`overflow-hidden transition-all duration-300 ${expandedPartner === 1 ? 'max-h-96' : 'max-h-0'}`}
+              >
+                <div className="px-8 pb-6 pt-2">
+                  <p className="text-gray-600 font-golos leading-relaxed mb-4">
+                    Advanced machine learning models tailored for business applications.
+                  </p>
+                  <p className="text-gray-600 font-golos leading-relaxed">
+                    Our team specializes in developing cutting-edge AI solutions that drive real business value. From natural language processing to computer vision, we build intelligent systems that automate processes, enhance decision-making, and unlock insights from your data. We leverage the latest frameworks and methodologies to deliver models that are not only accurate but also scalable and maintainable in production environments.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Accordion 2 - Enterprise Grade */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition-all duration-300">
+              <button
+                onClick={() => setExpandedPartner(expandedPartner === 2 ? null : 2)}
+                className="w-full flex items-center justify-between px-8 py-5 text-left hover:bg-gray-50 transition-colors"
+              >
+                <h3 className="text-xl font-new-hero text-gray-900">Enterprise Grade</h3>
+                <svg
+                  className={`w-5 h-5 text-[#A68660] transition-transform duration-300 ${expandedPartner === 2 ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div
+                className={`overflow-hidden transition-all duration-300 ${expandedPartner === 2 ? 'max-h-96' : 'max-h-0'}`}
+              >
+                <div className="px-8 pb-6 pt-2">
+                  <p className="text-gray-600 font-golos leading-relaxed mb-4">
+                    Secure, scalable, and reliable cloud infrastructure.
+                  </p>
+                  <p className="text-gray-600 font-golos leading-relaxed">
+                    We build enterprise-grade solutions with security and scalability at their core. Our infrastructure is designed to handle millions of requests while maintaining 99.99% uptime. We implement industry-standard security protocols, data encryption, and compliance measures to protect your business and customers. Every system we build is architected for growth, allowing you to scale seamlessly as your business expands without worrying about technical limitations.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Accordion 3 - Based in Oman */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition-all duration-300">
+              <button
+                onClick={() => setExpandedPartner(expandedPartner === 3 ? null : 3)}
+                className="w-full flex items-center justify-between px-8 py-5 text-left hover:bg-gray-50 transition-colors"
+              >
+                <h3 className="text-xl font-new-hero text-gray-900">Based in Oman</h3>
+                <svg
+                  className={`w-5 h-5 text-[#A68660] transition-transform duration-300 ${expandedPartner === 3 ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div
+                className={`overflow-hidden transition-all duration-300 ${expandedPartner === 3 ? 'max-h-96' : 'max-h-0'}`}
+              >
+                <div className="px-8 pb-6 pt-2">
+                  <p className="text-gray-600 font-golos leading-relaxed mb-4">
+                    Local understanding with global technology standards.
+                  </p>
+                  <p className="text-gray-600 font-golos leading-relaxed">
+                    Headquartered in Oman, we bring a unique advantage of understanding regional business culture, regulations, and market dynamics while delivering solutions that meet international standards. We bridge the gap between local needs and global best practices, ensuring your technology investments align with both your immediate market requirements and long-term global ambitions. Our strategic location and cultural expertise make us the ideal partner for businesses operating in the Middle East and beyond.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Accordion 4 - Data Driven */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition-all duration-300">
+              <button
+                onClick={() => setExpandedPartner(expandedPartner === 4 ? null : 4)}
+                className="w-full flex items-center justify-between px-8 py-5 text-left hover:bg-gray-50 transition-colors"
+              >
+                <h3 className="text-xl font-new-hero text-gray-900">Data Driven</h3>
+                <svg
+                  className={`w-5 h-5 text-[#A68660] transition-transform duration-300 ${expandedPartner === 4 ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div
+                className={`overflow-hidden transition-all duration-300 ${expandedPartner === 4 ? 'max-h-96' : 'max-h-0'}`}
+              >
+                <div className="px-8 pb-6 pt-2">
+                  <p className="text-gray-600 font-golos leading-relaxed mb-4">
+                    Decisions backed by powerful analytics and real-time data.
+                  </p>
+                  <p className="text-gray-600 font-golos leading-relaxed">
+                    We believe in the power of data to drive meaningful business outcomes. Every solution we build incorporates comprehensive analytics and real-time monitoring capabilities, giving you actionable insights into your operations. From user behavior tracking to predictive analytics, we help you make informed decisions based on facts, not assumptions. Our data pipelines are designed to process and visualize information in ways that are immediately useful to your business, turning raw data into strategic advantages.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Contact Form Section */}
       <div className="bg-gradient-to-r from-white to-[#E8F5E4] py-20" ref={contactRef}>
         <div className="mx-auto max-w-7xl px-4">
@@ -619,7 +893,7 @@ function App() {
                       onChange={handleFormChange}
                       required
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#A68660] focus:ring-2 focus:ring-[#A68660]/20 outline-none transition-all font-golos"
-                      placeholder="John Doe"
+                      placeholder="Mohammed Munther"
                       disabled={isSubmitting}
                     />
                   </div>
@@ -636,7 +910,7 @@ function App() {
                       onChange={handleFormChange}
                       required
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#A68660] focus:ring-2 focus:ring-[#A68660]/20 outline-none transition-all font-golos"
-                      placeholder="john@company.com"
+                      placeholder="Mohammed@Gmail.com"
                       disabled={isSubmitting}
                     />
                   </div>
