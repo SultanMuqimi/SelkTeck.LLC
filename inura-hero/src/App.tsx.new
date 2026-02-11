@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import selkteckIcon from "./assets/selkteck-logo.png";
+import selkteckIcon from "./assets/selkteck-icon.svg";
+import ombrettaPhoto from "./assets/Ombretta.jpeg";
+import kylePhoto from "./assets/Kyle.png";
+import tegPhoto from "./assets/teg.jpeg";
+import emmaPhoto from "./assets/emma.jpeg";
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -104,28 +108,32 @@ function App() {
                   }
                   return prev;
                 });
-                observer.unobserve(card);
               }
             }
           },
-          { threshold: 0.1 }
+          { threshold: 0.2, rootMargin: '0px 0px -100px 0px' }
         );
+
         observer.observe(card);
         observers.push(observer);
       }
     }
 
     return () => {
-      observers.forEach(observer => observer.disconnect());
+      for (const observer of observers) {
+        observer.disconnect();
+      }
     };
   }, []);
 
   const getCardAnimation = (index: number) => {
     const isVisible = visibleCards.includes(index);
+    const delay = index * 150;
+
     return {
-      transition: 'all 0.6s ease-out',
-      opacity: isVisible ? 1 : 0.3,
-      transform: isVisible ? 'translateY(0px)' : 'translateY(20px)',
+      transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(30px) scale(0.95)',
+      opacity: isVisible ? 1 : 0,
+      transition: `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${delay}ms`,
     };
   };
 
@@ -152,20 +160,20 @@ function App() {
           <div className="text-center">
             <div className={`transition-all duration-1000 ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
               <h1 className="text-5xl font-new-hero leading-tight md:text-6xl">
-                From Idea to <span className="text-[#A68660]">Implementation</span><span className="text-green-600">.</span>
+                From Idea to Implementation<span className="text-green-600">.</span>
               </h1>
               <p className="mt-6 text-lg font-golos text-gray-600 md:text-xl max-w-3xl mx-auto">
                 We take businesses from concept to reality—whether you need an intelligent AI system, a custom application, or robust cloud infrastructure to power it all.
               </p>
               <div className="mt-8 flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 justify-center">
                 <button
-                  className="bg-[#A68660] hover:bg-[#8B6F47] border-2 border-[#A68660] rounded-full px-8 py-3 text-sm font-golos text-white transition-all duration-300 hover:shadow-lg"
+                  className="bg-white border-2 border-gray-900 rounded-full px-8 py-3 text-sm font-golos text-gray-900 transition-all duration-300 hover:bg-gray-50 hover:shadow-lg"
                   onClick={scrollToContact}
                 >
                   Get Started
                 </button>
                 <button
-                  className="flex items-center rounded-lg px-6 py-3 text-sm font-golos transition-all duration-300 hover:text-green-700 justify-center"
+                  className="flex items-center rounded-lg px-6 py-3 text-sm font-golos transition-all duration-300 hover:text-gray-700 justify-center"
                   onClick={scrollToCaseStudies}
                 >
                   View Our Work
@@ -174,7 +182,7 @@ function App() {
               </div>
             </div>
 
-            {/* Stats/Showcase Section */}
+            {/* Stats/Showcase Section - Replacing Video */}
             <div className={`mt-16 transition-all duration-1000 ${isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`} style={{ transitionDelay: "400ms" }}>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
                 <div className="text-center p-6">
@@ -196,6 +204,41 @@ function App() {
               </div>
             </div>
           </div>
+
+          {/* Partner logos */}
+          <div className={`mt-16 hidden border-t border-gray-200 pt-8 md:block transition-all duration-1000 ${
+            isLoaded ? "opacity-70" : "opacity-0"
+          }`} style={{ transitionDelay: "800ms" }}>
+            <p className="text-center text-sm font-golos text-gray-500 mb-6">Trusted by Industry Leaders</p>
+            <div className="grid grid-cols-5 gap-8 items-center">
+              {/* Placeholder logos - Replace with actual client logos */}
+              <div className="flex items-center justify-center">
+                <div className="h-8 w-32 bg-gray-200/50 rounded flex items-center justify-center">
+                  <span className="text-gray-400 font-golos text-xs">Client Logo</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="h-8 w-32 bg-gray-200/50 rounded flex items-center justify-center">
+                  <span className="text-gray-400 font-golos text-xs">Client Logo</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="h-8 w-32 bg-gray-200/50 rounded flex items-center justify-center">
+                  <span className="text-gray-400 font-golos text-xs">Client Logo</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="h-8 w-32 bg-gray-200/50 rounded flex items-center justify-center">
+                  <span className="text-gray-400 font-golos text-xs">Client Logo</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="h-8 w-32 bg-gray-200/50 rounded flex items-center justify-center">
+                  <span className="text-gray-400 font-golos text-xs">Client Logo</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -205,7 +248,7 @@ function App() {
           {/* Header */}
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-new-hero text-gray-900 mb-6">
-              What We <span className="text-[#A68660]">Build</span>
+              What We Build
             </h2>
             <p className="text-lg md:text-xl font-golos text-gray-600 max-w-3xl mx-auto">
               We're not just developers—we're technology partners who solve real problems with modern solutions
@@ -234,7 +277,7 @@ function App() {
             {/* Card 2: Custom Applications */}
             <div
               ref={(el) => { cardRefs.current[1] = el; }}
-              className="bg-white/80 rounded-2xl p-6 border border-gray-200/50 hover:border-[#A68660]/50 hover:shadow-lg transition-all duration-300 group backdrop-blur-sm"
+              className="bg-white/80 rounded-2xl p-6 border border-gray-200/50 hover:border-green-600/50 hover:shadow-lg transition-all duration-300 group backdrop-blur-sm"
               style={getCardAnimation(1)}
             >
               <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-green-600/30 transition-colors">
@@ -251,7 +294,7 @@ function App() {
             {/* Card 3: Cloud Infrastructure */}
             <div
               ref={(el) => { cardRefs.current[2] = el; }}
-              className="bg-white/80 rounded-2xl p-6 border border-gray-200/50 hover:border-[#A68660]/50 hover:shadow-lg transition-all duration-300 group backdrop-blur-sm"
+              className="bg-white/80 rounded-2xl p-6 border border-gray-200/50 hover:border-green-600/50 hover:shadow-lg transition-all duration-300 group backdrop-blur-sm"
               style={getCardAnimation(2)}
             >
               <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-green-600/30 transition-colors">
@@ -268,7 +311,7 @@ function App() {
             {/* Card 4: Data & Analytics */}
             <div
               ref={(el) => { cardRefs.current[3] = el; }}
-              className="bg-white/80 rounded-2xl p-6 border border-gray-200/50 hover:border-[#A68660]/50 hover:shadow-lg transition-all duration-300 group backdrop-blur-sm"
+              className="bg-white/80 rounded-2xl p-6 border border-gray-200/50 hover:border-green-600/50 hover:shadow-lg transition-all duration-300 group backdrop-blur-sm"
               style={getCardAnimation(3)}
             >
               <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-green-600/30 transition-colors">
@@ -285,7 +328,7 @@ function App() {
             {/* Card 5: Technical Consulting */}
             <div
               ref={(el) => { cardRefs.current[4] = el; }}
-              className="bg-white/80 rounded-2xl p-6 border border-gray-200/50 hover:border-[#A68660]/50 hover:shadow-lg transition-all duration-300 group backdrop-blur-sm"
+              className="bg-white/80 rounded-2xl p-6 border border-gray-200/50 hover:border-green-600/50 hover:shadow-lg transition-all duration-300 group backdrop-blur-sm"
               style={getCardAnimation(4)}
             >
               <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center mb-4 group-hover:bg-green-600/30 transition-colors">
@@ -308,7 +351,7 @@ function App() {
           {/* Header */}
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-new-hero text-gray-900 mb-6">
-              Our <span className="text-[#A68660]">Work</span>
+              Our Work
             </h2>
             <p className="text-lg md:text-xl font-golos text-gray-600 max-w-3xl mx-auto">
               See how we've helped businesses transform their ideas into successful digital solutions
@@ -389,9 +432,158 @@ function App() {
 
           {/* View All Projects Button */}
           <div className="text-center mt-12">
-            <button className="bg-[#A68660] hover:bg-[#8B6F47] text-white border-2 border-[#A68660] rounded-full px-8 py-4 font-golos transition-all duration-300 hover:shadow-lg">
+            <button
+              className="bg-white border-2 border-gray-900 rounded-full px-8 py-3 text-sm font-golos text-gray-900 transition-all duration-300 hover:bg-gray-50 hover:shadow-lg"
+              onClick={scrollToCaseStudies}
+            >
               View All Projects
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Team Section */}
+      <div className="bg-gradient-to-r from-white to-[#E8F5E4] py-20">
+        <div className="mx-auto max-w-7xl px-4">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-new-hero text-gray-900 mb-6">
+              Meet Our Team
+            </h2>
+            <p className="text-lg md:text-xl font-golos text-gray-600 max-w-3xl mx-auto">
+              The passionate innovators building technology solutions that transform businesses
+            </p>
+          </div>
+
+          {/* Team Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Team Member 1 */}
+            <div className="group">
+              <div className="rounded-3xl p-8 h-96 overflow-hidden transition-all duration-300 hover:scale-105 flex flex-col items-center justify-center">
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-new-hero text-gray-800 mb-2">Dr. Ombretta Para</h3>
+                  <p className="text-gray-600 font-golos">Chief Technology Officer</p>
+                </div>
+
+                <div className="w-32 h-32 mb-4">
+                  <div className="w-full h-full rounded-full bg-gray-300 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
+                    <img
+                      src={ombrettaPhoto}
+                      alt="Dr. Ombretta Para"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+
+                <a
+                  href="https://www.linkedin.com/in/ombretta-para-646066241/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-white/60 hover:bg-white/80 rounded-full flex items-center justify-center transition-all duration-300 opacity-60 filter grayscale hover:opacity-80 hover:filter-none"
+                  title="Connect on LinkedIn"
+                >
+                  <svg className="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            {/* Team Member 2 */}
+            <div className="group">
+              <div className="rounded-3xl p-8 h-96 overflow-hidden transition-all duration-300 hover:scale-105 flex flex-col items-center justify-center">
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-new-hero text-gray-800 mb-2">Kyle Rood</h3>
+                  <p className="text-gray-600 font-golos">Lead Developer</p>
+                </div>
+
+                <div className="w-32 h-32 mb-4">
+                  <div className="w-full h-full rounded-full bg-gray-300 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
+                    <img
+                      src={kylePhoto}
+                      alt="Kyle Rood"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+
+                <a
+                  href="https://www.linkedin.com/in/kyle-rood/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-white/60 hover:bg-white/80 rounded-full flex items-center justify-center transition-all duration-300 opacity-60 filter grayscale hover:opacity-80 hover:filter-none"
+                  title="Connect on LinkedIn"
+                >
+                  <svg className="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            {/* Team Member 3 */}
+            <div className="group">
+              <div className="rounded-3xl p-8 h-96 overflow-hidden transition-all duration-300 hover:scale-105 flex flex-col items-center justify-center">
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-new-hero text-gray-800 mb-2">Teg Grenager</h3>
+                  <p className="text-gray-600 font-golos">Solutions Architect</p>
+                </div>
+
+                <div className="w-32 h-32 mb-4">
+                  <div className="w-full h-full rounded-full bg-gray-300 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
+                    <img
+                      src={tegPhoto}
+                      alt="Teg Grenager"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+
+                <a
+                  href="https://www.linkedin.com/in/grenager/?trk=lil_instructor"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-white/60 hover:bg-white/80 rounded-full flex items-center justify-center transition-all duration-300 opacity-60 filter grayscale hover:opacity-80 hover:filter-none"
+                  title="Connect on LinkedIn"
+                >
+                  <svg className="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            {/* Team Member 4 */}
+            <div className="group">
+              <div className="rounded-3xl p-8 h-96 overflow-hidden transition-all duration-300 hover:scale-105 flex flex-col items-center justify-center">
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-new-hero text-gray-800 mb-2">Emmanuel Henri</h3>
+                  <p className="text-gray-600 font-golos">UI/UX Designer</p>
+                </div>
+
+                <div className="w-32 h-32 mb-4">
+                  <div className="w-full h-full rounded-full bg-gray-300 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
+                    <img
+                      src={emmaPhoto}
+                      alt="Emmanuel Henri"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+
+                <a
+                  href="https://www.linkedin.com/in/mannyhenri/?trk=lil_instructor"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-white/60 hover:bg-white/80 rounded-full flex items-center justify-center transition-all duration-300 opacity-60 filter grayscale hover:opacity-80 hover:filter-none"
+                  title="Connect on LinkedIn"
+                >
+                  <svg className="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -413,19 +605,19 @@ function App() {
           <div className="relative">
             {/* Connecting Lines */}
             <div className="absolute inset-0 pointer-events-none hidden lg:block">
-              <div className="absolute top-[20%] left-[25%] w-[25%] h-0.5 bg-gradient-to-r from-[#A68660] to-[#8B6F47] opacity-60" />
-              <div className="absolute top-[70%] left-[25%] w-[25%] h-0.5 bg-gradient-to-r from-[#A68660] to-[#8B6F47] opacity-60" />
-              <div className="absolute top-[30%] left-[75%] w-0.5 h-[30%] bg-gradient-to-b from-[#8B6F47] to-[#A68660] opacity-60" />
-              <div className="absolute top-[35%] left-[40%] w-0.5 h-[20%] bg-gradient-to-b from-[#A68660] to-[#8B6F47] opacity-40 transform rotate-45 origin-top" />
+              <div className="absolute top-[20%] left-[25%] w-[25%] h-0.5 bg-gradient-to-r from-green-600 to-green-400 opacity-60" />
+              <div className="absolute top-[70%] left-[25%] w-[25%] h-0.5 bg-gradient-to-r from-green-600 to-green-400 opacity-60" />
+              <div className="absolute top-[30%] left-[75%] w-0.5 h-[30%] bg-gradient-to-b from-green-400 to-green-600 opacity-60" />
+              <div className="absolute top-[35%] left-[40%] w-0.5 h-[20%] bg-gradient-to-b from-green-600 to-green-400 opacity-40 transform rotate-45 origin-top" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
               {/* Step 1 - Discovery */}
               <div className="relative">
-                <div className="bg-white/80 rounded-2xl p-8 border border-gray-200/50 hover:border-[#A68660]/50 hover:shadow-lg transition-all duration-300 backdrop-blur-sm group">
+                <div className="bg-white/80 rounded-2xl p-8 border border-gray-200/50 hover:border-green-600/50 hover:shadow-lg transition-all duration-300 backdrop-blur-sm group">
                   <div className="absolute -top-4 left-8">
                     <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:bg-white transition-colors">
-                      <span className="text-[#A68660] font-bold text-small">01</span>
+                      <span className="text-green-600 font-bold text-small">01</span>
                     </div>
                   </div>
 
@@ -433,15 +625,15 @@ function App() {
                     <h3 className="text-2xl font-new-hero text-gray-900 mb-2">Discovery & Strategy</h3>
                     <div className="space-y-3 text-gray-600 font-golos">
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>Deep dive into your business goals and challenges</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>Technical assessment and feasibility analysis</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>Custom roadmap and technology recommendations</span>
                       </div>
                     </div>
@@ -451,10 +643,10 @@ function App() {
 
               {/* Step 2 - Design */}
               <div className="relative">
-                <div className="bg-white/80 rounded-2xl p-8 border border-gray-200/50 hover:border-[#A68660]/50 hover:shadow-lg transition-all duration-300 backdrop-blur-sm group">
+                <div className="bg-white/80 rounded-2xl p-8 border border-gray-200/50 hover:border-green-600/50 hover:shadow-lg transition-all duration-300 backdrop-blur-sm group">
                   <div className="absolute -top-4 left-8">
                     <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:bg-white transition-colors">
-                      <span className="text-[#A68660] font-bold text-small">02</span>
+                      <span className="text-green-600 font-bold text-small">02</span>
                     </div>
                   </div>
 
@@ -462,15 +654,15 @@ function App() {
                     <h3 className="text-2xl font-new-hero text-gray-900 mb-2">Design & Architecture</h3>
                     <div className="space-y-3 text-gray-600 font-golos">
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>User experience design and prototyping</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>System architecture and infrastructure planning</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>Security and scalability considerations</span>
                       </div>
                     </div>
@@ -480,10 +672,10 @@ function App() {
 
               {/* Step 3 - Development */}
               <div className="relative">
-                <div className="bg-white/80 rounded-2xl p-8 border border-gray-200/50 hover:border-[#A68660]/50 hover:shadow-lg transition-all duration-300 backdrop-blur-sm group">
+                <div className="bg-white/80 rounded-2xl p-8 border border-gray-200/50 hover:border-green-600/50 hover:shadow-lg transition-all duration-300 backdrop-blur-sm group">
                   <div className="absolute -top-4 left-8">
                     <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:bg-white transition-colors">
-                      <span className="text-[#A68660] font-bold text-small">03</span>
+                      <span className="text-green-600 font-bold text-small">03</span>
                     </div>
                   </div>
 
@@ -491,15 +683,15 @@ function App() {
                     <h3 className="text-2xl font-new-hero text-gray-900 mb-2">Development & Testing</h3>
                     <div className="space-y-3 text-gray-600 font-golos">
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>Agile development with regular check-ins</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>Continuous integration and automated testing</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>Quality assurance and performance optimization</span>
                       </div>
                     </div>
@@ -509,10 +701,10 @@ function App() {
 
               {/* Step 4 - Launch & Support */}
               <div className="relative">
-                <div className="bg-white/80 rounded-2xl p-8 border border-gray-200/50 hover:border-[#A68660]/50 hover:shadow-lg transition-all duration-300 backdrop-blur-sm group">
+                <div className="bg-white/80 rounded-2xl p-8 border border-gray-200/50 hover:border-green-600/50 hover:shadow-lg transition-all duration-300 backdrop-blur-sm group">
                   <div className="absolute -top-4 left-8">
                     <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:bg-white transition-colors">
-                      <span className="text-[#A68660] font-bold text-small">04</span>
+                      <span className="text-green-600 font-bold text-small">04</span>
                     </div>
                   </div>
 
@@ -520,15 +712,15 @@ function App() {
                     <h3 className="text-2xl font-new-hero text-gray-900 mb-2">Launch & Support</h3>
                     <div className="space-y-3 text-gray-600 font-golos">
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>Seamless deployment and go-live assistance</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>Training and documentation for your team</span>
                       </div>
                       <div className="flex items-start space-x-3">
-                        <div className="w-2 h-2 bg-[#A68660] rounded-full mt-2 flex-shrink-0" />
+                        <div className="w-2 h-2 bg-green-600 rounded-full mt-2 flex-shrink-0" />
                         <span>Ongoing maintenance, updates, and support</span>
                       </div>
                     </div>
@@ -555,20 +747,20 @@ function App() {
 
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-[#A68660]/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <svg className="w-6 h-6 text-[#A68660]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
                   <div>
                     <h4 className="font-new-hero text-gray-900 mb-1">Email Us</h4>
-                    <p className="font-golos text-gray-600">selkteck@gmail.com</p>
+                    <p className="font-golos text-gray-600">hello@selkteck.com</p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-[#A68660]/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <svg className="w-6 h-6 text-[#A68660]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
@@ -579,8 +771,8 @@ function App() {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-[#A68660]/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <svg className="w-6 h-6 text-[#A68660]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
@@ -618,7 +810,7 @@ function App() {
                       value={formData.name}
                       onChange={handleFormChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#A68660] focus:ring-2 focus:ring-[#A68660]/20 outline-none transition-all font-golos"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-600 focus:ring-2 focus:ring-green-600/20 outline-none transition-all font-golos"
                       placeholder="John Doe"
                       disabled={isSubmitting}
                     />
@@ -635,7 +827,7 @@ function App() {
                       value={formData.email}
                       onChange={handleFormChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#A68660] focus:ring-2 focus:ring-[#A68660]/20 outline-none transition-all font-golos"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-600 focus:ring-2 focus:ring-green-600/20 outline-none transition-all font-golos"
                       placeholder="john@company.com"
                       disabled={isSubmitting}
                     />
@@ -651,7 +843,7 @@ function App() {
                       name="company"
                       value={formData.company}
                       onChange={handleFormChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#A68660] focus:ring-2 focus:ring-[#A68660]/20 outline-none transition-all font-golos"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-600 focus:ring-2 focus:ring-green-600/20 outline-none transition-all font-golos"
                       placeholder="Your Company"
                       disabled={isSubmitting}
                     />
@@ -668,7 +860,7 @@ function App() {
                       onChange={handleFormChange}
                       required
                       rows={4}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#A68660] focus:ring-2 focus:ring-[#A68660]/20 outline-none transition-all font-golos resize-none"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-600 focus:ring-2 focus:ring-green-600/20 outline-none transition-all font-golos resize-none"
                       placeholder="Describe your project or idea..."
                       disabled={isSubmitting}
                     />
@@ -676,7 +868,7 @@ function App() {
 
                   <button
                     type="submit"
-                    className={`w-full bg-[#A68660] text-white rounded-full px-8 py-4 font-golos transition-all duration-300 hover:bg-[#8B6F47] hover:shadow-lg ${isSubmitting ? 'opacity-60 cursor-not-allowed' : ''}`}
+                    className={`w-full bg-gray-900 text-white rounded-full px-8 py-4 font-golos transition-all duration-300 hover:bg-gray-800 hover:shadow-lg ${isSubmitting ? 'opacity-60 cursor-not-allowed' : ''}`}
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? 'Sending...' : 'Send Message'}
@@ -701,19 +893,19 @@ function App() {
             {/* Contact Link - Right Side */}
             <div className="flex justify-center md:justify-end">
               <a
-                href="mailto:SelkTeck@Gmail.com"
+                href="mailto:hello@selkteck.com"
                 className="group"
               >
-                <div className="flex items-center space-x-3 bg-white border-2 border-[#A68660] rounded-full px-8 py-4 hover:bg-[#F5F5F0] transition-all duration-300 hover:shadow-lg">
+                <div className="flex items-center space-x-3 bg-white border-2 border-gray-900 rounded-full px-8 py-4 hover:bg-gray-50 transition-all duration-300 hover:shadow-lg">
                   <svg
-                    className="w-5 h-5 text-[#A68660]"
+                    className="w-5 h-5 text-gray-900"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  <span className="font-golos text-[#A68660] font-medium">
+                  <span className="font-golos text-gray-900 font-medium">
                     Get in Touch
                   </span>
                 </div>
@@ -734,4 +926,3 @@ function App() {
 }
 
 export default App;
-
